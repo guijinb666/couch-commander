@@ -1,0 +1,17 @@
+aiohttp>=3.9,<4
+qrcode[pil]>=7.4
+pillow>=10.0
+pywin32>=306; sys_platform == "win32"
+
+# 自签名 HTTPS 证书（certs.py）。缺了它服务会降级成 HTTP，
+# 手机浏览器就不会暴露 navigator.mediaDevices，麦克风权限框永远不会弹。
+cryptography>=42
+
+# 真实播放进度与时长（media.py 的 SMTC 通道，可选）。
+# 旧的 winsdk 已停止发布，改用新分拆包；版本号是 epoch 格式，
+# 不要写死 ==4.1.0（会 No matching distribution），让 pip 自行解析。
+winrt-runtime; sys_platform == "win32"
+winrt-Windows.Media.Control; sys_platform == "win32"
+winrt-Windows.Foundation; sys_platform == "win32"
+winrt-Windows.Foundation.Collections; sys_platform == "win32"
+winrt-Windows.Storage.Streams; sys_platform == "win32"

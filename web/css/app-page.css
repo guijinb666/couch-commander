@@ -1,0 +1,85 @@
+/* 应用页：白色圆角展示区 + V1 五卡立体堆叠 + 方向控制盘与音量按键。 */
+.app-zone{position:relative;padding:0 6%;perspective:1100px}
+/* 对照 reference/01-app-page.jpg：纯白圆角面板（圆角 36px、投影 0 18px 40px），卡片在面板内拱形堆叠 */
+.app-carousel{width:100%;height:100%;position:relative;overflow:hidden;border-radius:36px;background:radial-gradient(ellipse at 50% 0,#fff 0,#f7f7fa 58%,#dfe1e9 100%);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 #fff;touch-action:pan-y}
+.carousel-track{position:absolute;inset:0;transform-style:preserve-3d}
+/* 严格按 FRONTEND_BRIEF.md:82：居中卡放大 1.12 并上浮、邻卡缩放至 .86 / 透视后移、圆角 20px、堆叠 z-index 递减。
+   位移 55% 自身宽让中央卡压住邻卡约半张（参考图的紧凑拱形）；scale = 1.12 - |offset|*.13（中央 1.12 / ±1 .99 / ±2 .86）；
+   translateY = |offset|*3% - 3%（中央上浮 3%，邻卡依次下沉成拱形）；translateZ 每级 20px 差保证 3D 前后顺序。 */
+.app-card{--offset:0;position:absolute;top:50%;left:50%;width:34%;height:72%;padding:0;border:0;border-radius:24px;overflow:hidden;background:var(--app-color,#151923);transform:translate(-50%,-50%) translateX(calc(var(--offset) * 55%)) translateY(calc(min(max(var(--offset),var(--offset) * -1),2) * 3% - 3%)) translateZ(calc((2 - max(var(--offset),var(--offset) * -1)) * 20px)) scale(calc(1.12 - min(max(var(--offset),var(--offset) * -1),2) * .13));box-shadow:0 9px 15px #0006,inset 0 1px 2px #ffffff2b;z-index:calc(20 - max(var(--offset),var(--offset) * -1) * 10);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,filter .35s;will-change:transform;transform-origin:50% 50%;touch-action:pan-y;-webkit-box-reflect:below 0 linear-gradient(transparent 70%,#ffffff08)}
+.app-card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,#ffffff12,transparent 40%,#00000055);pointer-events:none}
+/* 只有长按锁定的卡显示线框：淡蓝色、紧贴卡片外沿、用 box-shadow 保证严格跟随 24px 圆角（不占布局、不裁素材）。
+   高特异性同时覆盖 has-art 的 box-shadow:none 兜底规则。 */
+.app-card.locked,.app-card[data-icon].has-art.locked{box-shadow:0 0 0 2px #a9c9ff}
+.app-card.locked{outline:none}
+.app-card .app-symbol{position:absolute;inset:0;display:grid;place-items:center;z-index:1}
+.app-card .app-symbol svg{width:66%;height:66%;overflow:visible;filter:drop-shadow(0 5px 12px #0004)}
+/* 真实应用图标：官方 favicon 本地 PNG 清晰显示，白色圆角托底，不再用手绘 SVG */
+.app-card .app-symbol .app-image{width:78%;height:78%;object-fit:contain;border-radius:22%;background:#fff;box-shadow:0 8px 18px #0005;filter:none}
+/* 用户提供的整张卡片素材：306×408 SVG 铺满卡片，卡片自身不再显示品牌渐变底/内高光 */
+.app-card.has-art{background:transparent}
+.app-card.has-art::after{display:none}
+.app-card .app-symbol .app-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:24px;filter:none}
+.app-card .app-symbol .app-fallback-letter{width:54%;aspect-ratio:1;border-radius:24%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;text-shadow:0 2px 6px #0006}
+.app-card:not(.active) .app-symbol{transform:scale(.95)}
+.app-card:not(.active){filter:brightness(.9) saturate(.94)}
+.app-card:active{filter:brightness(1.12)}
+.app-card:focus-visible{outline-offset:-5px}
+/* 显式层级兜底：部分 Safari 版本对 calc(z-index) 支持不佳，用 data-offset 覆盖保证中央卡在最前 */
+.app-card[data-offset="0"]{z-index:30}.app-card[data-offset="1"],.app-card[data-offset="-1"]{z-index:20}.app-card[data-offset="2"],.app-card[data-offset="-2"]{z-index:10}
+/* 品牌渐变底：沿用 V1 观感，映射到 V2 的五个国内应用，并保留旧图标兼容 */
+.app-card[data-icon="tiktok"]{background:linear-gradient(165deg,#1d1e28 0%,#0b0c11 58%,#1d1a2e 100%)}
+.app-card[data-icon="bilibili"]{background:linear-gradient(150deg,#ff9ec0,#d8477c 55%,#a72f5e)}
+.app-card[data-icon="qqmusic"]{background:linear-gradient(150deg,#5fe0a8,#1e9c65 55%,#126b47)}
+.app-card[data-icon="netease"]{background:linear-gradient(150deg,#f06666,#b81c1c 55%,#7d0d0d)}
+.app-card[data-icon="tencentvideo"]{background:linear-gradient(150deg,#ffa361,#e05a00 55%,#a63c00)}
+.app-card[data-icon="finder"]{background:linear-gradient(160deg,#213b59,#0d1727)}
+.app-card[data-icon="youtube"]{background:linear-gradient(150deg,#f2f1f6,#b8bac5)}
+.app-card[data-icon="spotify"]{background:linear-gradient(145deg,#1a514b,#0e302e)}
+.app-card[data-icon="steam"]{background:linear-gradient(145deg,#1a3453,#0a182e)}
+.app-card[data-icon="chrome"]{background:linear-gradient(145deg,#eef4ff,#b6c8e5)}
+.app-card[data-icon="generic"]{background:linear-gradient(145deg,#3d4862,#1c2438)}
+/* 用户 SVG 卡片必须原样显示：清掉旧卡片的品牌渐变底、内高光、缩放、亮度滤镜与倒影。
+   旧规则与 [data-icon] 同特异性且写在后面，会盖掉 background:transparent，
+   素材再被 :not(.active) 的 scale(.95) 缩小一圈，四周就露出旧卡片形成「边框」（m02151）。 */
+.app-card[data-icon].has-art{background:transparent;box-shadow:none;border:0;border-radius:24px;overflow:hidden;-webkit-box-reflect:none}
+.app-card[data-icon].has-art::after{display:none}
+.app-card[data-icon].has-art:not(.active){filter:none}
+.app-card[data-icon].has-art:not(.active) .app-symbol{transform:none}
+/* 方向控制区：音量弧 | 圆环 D-pad | 音量弧，下排 A/B/C 胶囊 */
+.dpad-zone{height:100%;max-width:460px;margin:auto;position:relative;display:grid;grid-template-columns:16% minmax(0,1fr) 16%;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:center;column-gap:1.5%;padding:10px 12px 8px;background:linear-gradient(180deg,#232839,#1a1f2e);border:1px solid #343a4e;border-radius:30px;box-shadow:0 12px 30px #000a,inset 0 1px 0 #ffffff10}
+/* 音量弧键：绝对定位保证左右到面板边缘等距 */
+.volume-key{position:relative;grid-row:1;align-self:center;justify-self:center;width:52px;height:min(96%,232px);border:1px solid #4a5165;border-radius:999px;background:linear-gradient(180deg,#3a4054,#262c3d);color:#e8eaf2;font-size:22px;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:0 7px 18px #0009,inset 0 1px 0 #ffffff1f;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;z-index:1}.volume-key.pressed{background:linear-gradient(180deg,#4a5370,#303950);transform:scale(.97)}.volume-down{grid-column:1}.volume-up{grid-column:3}
+/* D-pad 圆环：3×3 九宫格，四个方向键各占一条边、中心格是播放键、四角留空。
+   此前四个扇形是绝对定位互相重叠（.play-key 直径 55% 压住所有扇形内缘，
+   .dpad-down 在 DOM 靠后又盖住 .dpad-right），实测右键中心点到的是播放键，
+   四个方向键的可点区都退化成外缘一条窄缝。改成九宫格后每个键的命中区互斥，
+   点哪儿就是哪儿，且视觉上仍是参考图的「圆环 + 四向箭头 + 中央播放」。 */
+.dpad{grid-column:2;grid-row:1;height:min(100%,232px);width:auto;aspect-ratio:1;max-width:100%;position:relative;border-radius:50%;background:linear-gradient(160deg,#2b3145,#1b2030);box-shadow:0 12px 28px #000b,inset 0 1px 0 #ffffff14,inset 0 -2px 8px #0008;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.22fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1.22fr) minmax(0,1fr);padding:5%}
+/* 中央列/行给到 1.22fr：播放键能占到内径约 38%（接近参考图比例），
+   四向键仍是各自独立的格子，命中区不重叠。
+   下限定死 1fr 而不是 auto——auto 会被子元素内在尺寸撑开，实测把中间行
+   涨到 154px、上下两行压到 28px，中央键被拉成竖椭圆。 */
+.dpad::before{content:'';position:absolute;inset:8%;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 45deg,
+    #ffffff08 0deg 80deg, transparent 80deg 90deg,
+    #ffffff08 90deg 170deg, transparent 170deg 180deg,
+    #ffffff08 180deg 260deg, transparent 260deg 270deg,
+    #ffffff08 270deg 350deg, transparent 350deg 360deg)}
+/* 上面这层只是参考图里「分段圆环」的装饰，pointer-events:none，不参与命中 */
+.dpad-key{position:relative;background:transparent;border:none;color:#e8eaf2;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;transition:background .15s;border-radius:16px;min-width:0;min-height:0}
+.dpad-key span{width:0;height:0;border:6px solid transparent;position:absolute}
+/* 四条边各占一格；四角由 .dpad 背景留空，与参考图一致 */
+.dpad-up{grid-area:1/2/2/3}.dpad-up span{border-bottom:12px solid #e8eaf2;border-left-width:10px;border-right-width:10px;bottom:20%;left:50%;transform:translateX(-50%)}
+.dpad-right{grid-area:2/3/3/4}.dpad-right span{border-left:12px solid #e8eaf2;border-top-width:10px;border-bottom-width:10px;right:20%;top:50%;transform:translateY(-50%)}
+.dpad-down{grid-area:3/2/4/3}.dpad-down span{border-top:12px solid #e8eaf2;border-left-width:10px;border-right-width:10px;top:20%;left:50%;transform:translateX(-50%)}
+.dpad-left{grid-area:2/1/3/2}.dpad-left span{border-right:12px solid #e8eaf2;border-top-width:10px;border-bottom-width:10px;left:20%;top:50%;transform:translateY(-50%)}
+.dpad-key.pressed{background:#ffffff14}
+/* 中央播放键：占中心格，带长按锁定进度环 */
+.play-key{grid-area:2/2/3/3;position:relative;justify-self:center;align-self:center;width:100%;height:100%;max-width:100%;max-height:100%;aspect-ratio:1;border-radius:50%;border:1px solid #4a5165;background:radial-gradient(circle at 32% 28%,#454d66,#242a3c 70%);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 9px 22px #000c,inset 0 1px 0 #ffffff24;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;z-index:2}
+/* aspect-ratio:1 保证中央键在非方形格子里仍是正圆（此前被拉成 67×154 的竖椭圆） */
+.play-key.pressed{transform:scale(.96)}.play-key .icon{width:38%;height:38%;margin-left:4%}.play-ring{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);transform:rotate(-90deg);pointer-events:none}.play-ring circle{fill:none;stroke-width:5}.play-ring-base{stroke:#ffffff1c}.play-ring-fill{stroke:#7ea2ff;stroke-linecap:round;stroke-dasharray:351.858;stroke-dashoffset:351.858}
+/* A/B/C 快捷键槽：整体深色圆角面板内三枚胶囊 */
+.page-slots{grid-column:1 / 4;grid-row:2;width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#232839;border:1px solid #3a4054;border-radius:22px;padding:8px;box-shadow:inset 0 1px 0 #ffffff10,0 7px 16px #0007}
+.page-slot{height:46px;border:1px solid #4a5165;border-radius:999px;background:linear-gradient(180deg,#3a4054,#262c3d);color:#e8eaf2;font-size:16px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;box-shadow:0 4px 12px #0007,inset 0 1px 0 #ffffff1a;touch-action:manipulation;user-select:none;-webkit-user-select:none;cursor:pointer}.page-slot small{font-size:8px;font-weight:400;color:#9aa1b8;max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.page-slot.has-hotkey{border-color:#7ea2ff88}.page-slot.pressed{transform:scale(.96)}
+@media(max-height:700px){.dpad-zone{grid-template-rows:minmax(0,1fr) auto}.page-slot{height:40px}.dpad{height:min(100%,196px);width:auto}.volume-key{width:46px;height:min(96%,196px)}}

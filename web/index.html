@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#07090d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="color-scheme" content="dark">
+  <title>Couch Commander · 沙发指挥官</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/app-page.css">
+  <link rel="stylesheet" href="./css/touchpad.css">
+  <link rel="stylesheet" href="./css/settings.css">
+</head>
+<body>
+  <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5"/></symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M3 9a14 14 0 0 1 18 0M6.5 12.5a9 9 0 0 1 11 0M10 16a4 4 0 0 1 4 0"/><circle cx="12" cy="19" r=".8" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.8 3h4.4l.7 2.6 2 .9 2.5-1 2.2 3.8-2 1.8v2.2l2 1.8-2.2 3.8-2.5-1-2 .9-.7 2.6H9.8l-.7-2.6-2-.9-2.5 1-2.2-3.8 2-1.8v-2.2l-2-1.8 2.2-3.8 2.5 1 2-.9z"/><circle cx="12" cy="12" r="3.2"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.3"/><rect x="14" y="3" width="7" height="7" rx="1.3"/><rect x="3" y="14" width="7" height="7" rx="1.3"/><rect x="14" y="14" width="7" height="7" rx="1.3"/></symbol>
+      <symbol id="i-touchpad" viewBox="0 0 24 24"><circle cx="7" cy="4" r="1"/><circle cx="12" cy="4" r="1"/><circle cx="17" cy="4" r="1"/><circle cx="7" cy="9" r="1"/><circle cx="12" cy="9" r="1"/><circle cx="17" cy="9" r="1"/><circle cx="7" cy="14" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M9 21l3-3 3 3"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="4"/></symbol>
+      <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 16h8"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 3h6l1 4H8zM6 7l1 14h10l1-14M10 11v6M14 11v6"/></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l4-1 11-11-4-4L4 15z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M8 17h8M9 21h6M8.5 14.5A6 6 0 1 1 15.5 14.5L15 17H9z"/></symbol>
+      <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="5" width="14" height="14" rx="3"/><path d="m16 10 6-3v10l-6-3"/></symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+    </defs>
+  </svg>
+
+  <main id="remote" class="remote" data-ui>
+    <header class="statusbar">
+      <button id="connection-pill" class="status-pill connection-pill" type="button" aria-label="连接状态，打开连接说明">
+        <svg class="icon"><use href="#i-monitor"/></svg><span id="connection-dot" class="connection-dot"></span>
+        <span id="connection-text" class="connection-text">连接中…</span>
+        <svg class="icon chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <div class="statusbar-right">
+        <div id="latency-pill" class="status-pill latency-pill" aria-label="网络延迟">
+          <svg class="icon"><use href="#i-wifi"/></svg><span id="latency-text">— ms</span>
+          <span id="latency-bars" class="latency-bars"><i></i><i></i><i></i></span>
+        </div>
+        <button id="settings-open" class="settings-open" type="button" aria-label="打开设置"><svg class="icon"><use href="#i-settings"/></svg></button>
+      </div>
+    </header>
+
+    <section id="stage" class="stage" aria-label="应用控制区">
+      <section id="app-zone" class="app-zone" aria-label="应用切换">
+        <div id="app-carousel" class="app-carousel" role="region" aria-roledescription="轮播" aria-label="左右滑动切换应用">
+          <div id="carousel-track" class="carousel-track"></div>
+        </div>
+      </section>
+      <section id="keyboard-zone" class="keyboard-zone" aria-label="键盘" hidden>
+        <div id="keyboard" class="keyboard"></div>
+      </section>
+    </section>
+
+    <div class="media-progress" aria-label="媒体与亮度控制">
+      <div class="media-progress-row">
+        <svg class="icon media-row-icon" aria-hidden="true"><use href="#i-video"/></svg>
+        <div id="progress-track" class="progress-track" role="progressbar" aria-label="播放进度，可拖动" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-fill" class="progress-fill"></div><span id="progress-head" class="progress-head"></span>
+        </div>
+        <span id="progress-time" class="media-time" aria-live="off">--:-- / --:--</span>
+      </div>
+      <div class="media-progress-row">
+        <svg class="icon media-row-icon" aria-hidden="true"><use href="#i-bulb"/></svg>
+        <div id="brightness-track" class="progress-track brightness-track" role="slider" aria-label="屏幕亮度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+          <div id="brightness-fill" class="progress-fill brightness-fill"></div><span id="brightness-head" class="progress-head brightness-head"></span>
+        </div>
+        <span id="brightness-value" class="media-time brightness-value" aria-live="off">--</span>
+      </div>
+    </div>
+
+    <section id="control-zone" class="control-zone">
+      <section id="dpad-zone" class="dpad-zone" aria-label="方向与媒体控制">
+        <button id="volume-down" class="volume-key volume-down" data-action="volume_down" aria-label="降低音量，长按连续降低"><span>−</span></button>
+        <div class="dpad">
+          <button class="dpad-key dpad-up" data-direction="up" aria-label="上"><span></span></button>
+          <button class="dpad-key dpad-right" data-direction="right" aria-label="右，长按快进"><span></span></button>
+          <button class="dpad-key dpad-down" data-direction="down" aria-label="下"><span></span></button>
+          <button class="dpad-key dpad-left" data-direction="left" aria-label="左，长按快退"><span></span></button>
+          <button id="play-key" class="play-key" aria-label="播放或暂停，长按锁定当前应用">
+            <svg id="play-ring" class="play-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="play-ring-base" cx="60" cy="60" r="56"/><circle id="play-ring-fill" class="play-ring-fill" cx="60" cy="60" r="56"/></svg>
+            <svg id="play-icon" class="icon play-icon"><use href="#i-play"/></svg>
+          </button>
+        </div>
+        <button id="volume-up" class="volume-key volume-up" data-action="volume_up" aria-label="提高音量，长按连续提高"><span>+</span></button>
+        <div class="page-slots">
+          <button class="page-slot" data-page-slot="0" aria-label="自定义页面一"><span>A</span><small></small></button>
+          <button class="page-slot" data-page-slot="1" aria-label="自定义页面二"><span>B</span><small></small></button>
+          <button class="page-slot" data-page-slot="2" aria-label="自定义页面三"><span>C</span><small></small></button>
+        </div>
+      </section>
+
+      <section id="touchpad-zone" class="touchpad-zone" aria-label="触控板" hidden>
+        <div id="touchpad" class="touchpad" tabindex="0" role="application" aria-label="单指移动，轻点左键，双指滚动，三指切换应用"></div>
+        <div id="gesture-feedback" class="gesture-feedback" aria-live="polite"></div>
+        <button id="keyboard-toggle" class="keyboard-toggle" type="button" aria-label="打开键盘"><svg class="icon"><use href="#i-keyboard"/></svg></button>
+      </section>
+    </section>
+
+    <nav class="page-tabs" aria-label="主页面">
+      <button class="page-tab active" data-page="apps" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg><span>应用页</span><i></i></button>
+      <button id="voice-button" class="voice-button" type="button" aria-label="长按语音输入"><svg class="icon"><use href="#i-mic"/></svg></button>
+      <button class="page-tab" data-page="touchpad"><svg class="icon"><use href="#i-touchpad"/></svg><span>触控板</span><i></i></button>
+    </nav>
+    <div id="disconnect-overlay" class="disconnect-overlay" hidden>
+      <svg class="icon"><use href="#i-wifi"/></svg><strong id="disconnect-title">连接已断开</strong><span id="disconnect-detail">正在自动重连…</span>
+      <button id="reconnect-button" type="button">立即重连</button>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+    <header class="settings-header"><h1 id="settings-title">设置</h1><button id="settings-close" class="icon-button" aria-label="关闭设置"><svg class="icon"><use href="#i-close"/></svg></button></header>
+    <nav class="settings-tabs" aria-label="设置分类">
+      <button data-settings-tab="general" class="active">通用</button><button data-settings-tab="hotkeys">快捷键</button><button data-settings-tab="pages">页面</button><button data-settings-tab="apps">应用</button>
+    </nav>
+    <div class="settings-body">
+      <section id="settings-general" class="settings-panel">
+        <h2>操控手感</h2>
+        <label class="range-setting"><span>鼠标灵敏度 <output id="sensitivity-value">1.6</output></span><input id="setting-sensitivity" type="range" min="0.2" max="3" step="0.1"></label>
+        <label class="range-setting"><span>滚动速度 <output id="scroll-value">0.6</output></span><input id="setting-scroll" type="range" min="0.1" max="2" step="0.1"></label>
+        <label class="toggle-setting"><span>自然滚动<small>与屏幕内容同向移动</small></span><input id="setting-natural" type="checkbox" role="switch"></label>
+        <label class="toggle-setting"><span>反向滑动<small>反转应用横向滑动方向</small></span><input id="setting-swipe" type="checkbox" role="switch"></label>
+        <label class="toggle-setting"><span>锁定当前应用<small>方向键控制媒体而非切换应用</small></span><input id="setting-lock" type="checkbox" role="switch"></label>
+        <label class="range-setting"><span>双击间隔 <output id="double-tap-value">300 ms</output></span><input id="setting-double-tap" type="range" min="200" max="500" step="10"></label>
+        <label class="range-setting"><span>长按阈值 <output id="lock-hold-value">2000 ms</output></span><input id="setting-lock-hold" type="range" min="500" max="3000" step="100"></label>
+        <button id="fullscreen-button" class="primary-button" type="button">进入全屏</button>
+        <button id="settings-reconnect" class="secondary-button" type="button">重新连接</button>
+        <details class="connection-help"><summary>离线演示与连接说明</summary><p>使用 HTTP 打开页面时会自动连接同源服务。直接打开 HTML 或仅启动静态服务器时进入演示态，控制台会记录全部待发信封；此时不会操作电脑。</p></details>
+      </section>
+      <section id="settings-hotkeys" class="settings-panel" hidden>
+        <div class="section-heading"><h2>快捷键</h2><button id="hotkey-add" class="small-add" aria-label="新增快捷键"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+        <details class="template-section"><summary>套用平台模板</summary><div id="template-list" class="template-list"></div></details>
+        <div id="hotkey-list" class="editor-list"></div>
+        <form id="hotkey-form" class="editor-form" hidden>
+          <input type="hidden" id="hotkey-id">
+          <label>名称<input id="hotkey-name" maxlength="40" required placeholder="例如：复制"></label>
+          <div class="key-picker-section">
+            <div class="key-picker-heading"><span>点选键帽组合</span><button id="hotkey-record" type="button" class="record-alt">或物理键盘录制</button></div>
+            <div id="key-picker" class="key-picker"></div>
+          </div>
+          <p id="hotkey-recorded" class="recorded-keys"></p>
+          <div class="form-actions"><button id="hotkey-cancel" type="button" class="secondary-button">取消</button><button type="submit" class="primary-button">保存快捷键</button></div>
+        </form>
+      </section>
+      <section id="settings-pages" class="settings-panel" hidden>
+        <div class="section-heading"><h2>自定义页面</h2><button id="page-add" class="small-add" aria-label="新增页面"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+        <p class="section-note">页面由若干快捷键组成，启用后显示在 A / B / C 区域。</p>
+        <div id="page-list" class="editor-list"></div>
+        <form id="page-form" class="editor-form" hidden><input type="hidden" id="page-id"><label>页面名称<input id="page-name" maxlength="30" required placeholder="例如：视频剪辑"></label><label>关联应用<input id="page-app" list="app-name-options" placeholder="可选，例如：chrome"><datalist id="app-name-options"></datalist></label><label>选择快捷键<select id="page-hotkeys" multiple size="6"></select></label><div class="form-actions"><button id="page-cancel" type="button" class="secondary-button">取消</button><button type="submit" class="primary-button">保存页面</button></div></form>
+      </section>
+      <section id="settings-apps" class="settings-panel" hidden><div class="section-heading"><h2>已发现应用</h2><button id="apps-refresh" class="small-add" aria-label="刷新应用列表"><svg class="icon"><use href="#i-monitor"/></svg></button></div><p class="section-note">添加后写入服务端配置。图标使用内置矢量图形，随附远程应用时也支持图标地址。</p><div id="app-list" class="editor-list app-editor-list"></div></section>
+    </div>
+    <p id="settings-status" class="settings-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

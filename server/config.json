@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "pages": [
+    {
+      "id": "pg-1",
+      "name": "常用",
+      "icon": "⭐"
+    },
+    {
+      "id": "pg-2",
+      "name": "办公",
+      "icon": "💼"
+    },
+    {
+      "id": "pg-3",
+      "name": "娱乐",
+      "icon": "🎮"
+    }
+  ],
+  "active_page_id": "pg-1",
+  "hotkeys": [],
+  "apps": [
+    {
+      "id": "app-1",
+      "name": "抖音",
+      "path": "https://www.douyin.com/",
+      "web": "https://www.douyin.com/",
+      "local": {
+        "names": [
+          "抖音",
+          "douyin",
+          "抖音电脑版"
+        ],
+        "exe": [
+          "douyin.exe",
+          "Douyin.exe"
+        ],
+        "paths": []
+      },
+      "icon": "🎵",
+      "color": "#111118"
+    },
+    {
+      "id": "app-2",
+      "name": "bilibili",
+      "path": "https://www.bilibili.com/",
+      "web": "https://www.bilibili.com/",
+      "local": {
+        "names": [
+          "哔哩哔哩",
+          "bilibili",
+          "bilibili pc"
+        ],
+        "exe": [
+          "bilibili.exe",
+          "bili.exe"
+        ],
+        "paths": []
+      },
+      "icon": "📺",
+      "color": "#FB7299"
+    },
+    {
+      "id": "app-3",
+      "name": "QQ音乐",
+      "path": "https://y.qq.com/",
+      "web": "https://y.qq.com/",
+      "local": {
+        "names": [
+          "QQ音乐",
+          "QQMusic",
+          "QQMusicPC"
+        ],
+        "exe": [
+          "QQMusic.exe"
+        ],
+        "paths": []
+      },
+      "icon": "🎧",
+      "color": "#31C27C"
+    },
+    {
+      "id": "app-4",
+      "name": "网易云音乐",
+      "path": "https://music.163.com/",
+      "web": "https://music.163.com/",
+      "local": {
+        "names": [
+          "网易云音乐",
+          "NeteaseCloudMusic",
+          "cloudmusic"
+        ],
+        "exe": [
+          "cloudmusic.exe"
+        ],
+        "paths": []
+      },
+      "icon": "🎶",
+      "color": "#C20C0C"
+    },
+    {
+      "id": "app-5",
+      "name": "腾讯视频",
+      "path": "https://v.qq.com/",
+      "web": "https://v.qq.com/",
+      "local": {
+        "names": [
+          "腾讯视频",
+          "QQLive",
+          "TencentVideo"
+        ],
+        "exe": [
+          "QQLive.exe",
+          "TencentVideo.exe"
+        ],
+        "paths": []
+      },
+      "icon": "▶",
+      "color": "#FF5C00"
+    }
+  ],
+  "touchpad": {
+    "move_sensitivity": 1.6,
+    "scroll_speed": 0.6,
+    "double_click_ms": 300,
+    "drag_hold_ms": 350,
+    "lock_hold_ms": 2000
+  }
+}
