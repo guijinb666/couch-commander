@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 运行时产物（每个用户自己生成，不进仓库）
+server/config.v1.backup.json
+server/apps.json
+server/qr.png
+server/certs/
+server/logs/
+server/run/
+
+# 自检脚本的输出
+_*_result*.txt
+_inject_result.txt
+_focus_diag_result.txt
+_https_*.txt
+_tapsend.json
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 临时暂存目录
+_stage*/
+_pkg_verify*/
